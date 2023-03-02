@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"name": "pixelzimmer_artnet",
+			"path": "../pixelzimmer_artnet"
+		},
+		{
+			"name": "pixelzimmer_robot",
+			"path": "."
+		},
+		{
+			"path": "../../../../Work/4PIXELZIMMER/code_research/maybe_talking"
+		}
+	],
+	"settings": {}
+}
