@@ -3,6 +3,9 @@
 
 int debugging_enabled=1;
 
+bool sensors_ON=false;
+bool drive_ON=false;
+
 #define F_GRD_LO 127
 #define F_GRD_HI 256
 #define F_TRI_LOL 64
@@ -10,5 +13,7 @@ int debugging_enabled=1;
 #define F_TRI_LOR 190
 #define F_REV_GRD_LO 1
 #define F_REV_GRD_HI 127
+
+
 
 #endif

@@ -45,8 +45,8 @@ void initListening(){
 
 void updateListening(){
       if(gotSomething){
-        //drive(myData.x,myData.y);
-       fuzzyDrive(myData.x,myData.y,255); 
+    
+       
 mood_friendly();
 
 //DEBUG("received some data!");

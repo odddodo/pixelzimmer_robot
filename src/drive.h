@@ -12,9 +12,9 @@ const int pwmChannel_A=0;
 const int pwmChannel_B=1;
 const int resolution=8;
 
-double AGGR_PWR(double sp, double trn, double hlt){
-    return fuzzyOR(sp,fuzzyAND(trn,fuzzyNOT(hlt)));
-}
+float vel_fb;
+float vel_trn;
+
 
 void stopSTDBY(){
     digitalWrite(MOTOR_STDBY,LOW);
@@ -42,6 +42,10 @@ ledcAttachPin(MOTOR_B_PWM,pwmChannel_B);
 
 stopSTDBY();
 
+vel_fb=127;
+vel_trn=127;
+
+
 DEBUG("drive setup!")
 }
 
@@ -65,6 +69,7 @@ void drive(int speed_A, int speed_B){
 }
 
 
+
 void fuzzyDrive(int fb, int trn, int maxSpeed){
 
 float f_FWD =fuzzyGrade(fb,F_GRD_LO,F_GRD_HI);
@@ -74,10 +79,6 @@ float f_TRN_L=fuzzyRevGrade(trn, F_REV_GRD_LO, F_REV_GRD_HI);
 float f_TRN_HLT=fuzzyTriangle(trn,F_TRI_LOL, F_TRI_HI, F_TRI_LOR);
 float f_TRN_R=fuzzyGrade(trn,F_GRD_LO, F_GRD_HI);
 
-//int MTL_speed = (int)(maxSpeed*AGGR_PWR(f_FWD,f_TRN_L,f_TRN_HLT))+(-maxSpeed)*AGGR_PWR(f_BCK,f_TRN_R,f_TRN_HLT);
-//int MTR_speed=(int)(maxSpeed*AGGR_PWR(f_FWD,f_TRN_R,f_TRN_HLT))+(-maxSpeed)*AGGR_PWR(f_BCK,f_TRN_L,f_TRN_HLT);;
-
-//DEBUG(String(fb)+"___"+String(f_FWD)+" "+String(f_FWD_HLT)+" "+String(f_BCK));
 
 if(f_FWD_HLT>0.85&&f_TRN_HLT>0.85){
     stopSTDBY();
@@ -90,4 +91,23 @@ drive(MTL_speed,MTR_speed);
 }
 }
 
+void updateDrive(int fb, int trn){
+   float acc_fb=0;
+   float acc_trn=0;
+    acc_fb=map(fb,0,255,-100,100)*0.01;
+    acc_trn=map(trn,0,255,-100,100)*0.01;
+
+
+vel_fb=(vel_fb>0&&vel_fb<255)?vel_fb+acc_fb:vel_fb=vel_fb;
+vel_trn=(vel_trn>0&&vel_trn<255)?vel_trn+acc_trn:vel_trn=vel_trn;
+DEBUG(String(vel_fb)+" "+String(vel_trn));
+fuzzyDrive(vel_fb, vel_trn, 255);
+
+}
+
+void stopSmooth(){
+    vel_fb=(vel_fb>127)?vel_fb--:vel_fb++;
+    vel_trn=(vel_trn>127)?vel_trn--:vel_trn++;
+    fuzzyDrive(vel_fb, vel_trn, 255);
+}
 #endif

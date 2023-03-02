@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <behaviors.h>
 #include <listening.h>
 #include <sense.h>
 
@@ -12,6 +13,6 @@ initSense();
 }
  
 void loop() {
-updateListening();
-updateSense();
+behave(1);
+
 }
