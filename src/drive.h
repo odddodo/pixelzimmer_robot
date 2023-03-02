@@ -96,12 +96,15 @@ void updateDrive(int fb, int trn){
    float acc_trn=0;
     acc_fb=map(fb,0,255,-100,100)*0.01;
     acc_trn=map(trn,0,255,-100,100)*0.01;
+vel_fb+=acc_fb;
+vel_trn+=acc_trn;
+if(vel_fb>255)vel_fb=255;
+if(vel_fb<0)vel_fb=0;
+if(vel_trn>255)vel_trn=255;
+if(vel_trn<0)vel_trn=0;
 
-
-vel_fb=(vel_fb>0&&vel_fb<255)?vel_fb+acc_fb:vel_fb=vel_fb;
-vel_trn=(vel_trn>0&&vel_trn<255)?vel_trn+acc_trn:vel_trn=vel_trn;
 DEBUG(String(vel_fb)+" "+String(vel_trn));
-fuzzyDrive(vel_fb, vel_trn, 255);
+fuzzyDrive((int)vel_fb, (int)vel_trn, 255);
 
 }
 
