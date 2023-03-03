@@ -3,8 +3,17 @@
 
 int debugging_enabled=1;
 
+bool debug_sense=true;
+bool debug_drive=false;
+bool debug_listening=false;
+bool debug_behaviors=false;
+
 bool sensors_ON=false;
 bool drive_ON=false;
+
+float agility=0.05;
+int decelerate_rate=20;
+float dead_band=0.5;
 
 #define F_GRD_LO 127
 #define F_GRD_HI 256

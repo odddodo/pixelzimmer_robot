@@ -16,7 +16,10 @@ void manual(){
     updateListening();
     updateSense();
     if(gotSomething){
-    updateDrive(myData.x,myData.y);
+        int comp_fb=constrain(myData.x-sensorData[sensorNames::FRONT]*127,0,255);
+        int comp_trn=127;
+DEBUG(String(comp_fb));
+    updateDrive(comp_fb,myData.y);    
     }
     else{
     stopSmooth();

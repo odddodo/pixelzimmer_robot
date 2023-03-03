@@ -17,6 +17,7 @@ float vel_trn;
 
 
 void stopSTDBY(){
+
     digitalWrite(MOTOR_STDBY,LOW);
     digitalWrite(MOTOR_A_1,LOW);
     digitalWrite(MOTOR_A_2,LOW);
@@ -24,29 +25,30 @@ void stopSTDBY(){
     digitalWrite(MOTOR_B_2,LOW);
     digitalWrite(MOTOR_A_PWM,LOW);
     digitalWrite(MOTOR_B_PWM,LOW);
+    DEBUG("STDBY!");
 }
 
 void initDrive(){
-pinMode(MOTOR_A_1,OUTPUT);
-pinMode(MOTOR_A_2,OUTPUT);
-pinMode(MOTOR_B_1,OUTPUT);
-pinMode(MOTOR_B_2,OUTPUT);
-pinMode(MOTOR_A_PWM,OUTPUT);
-pinMode(MOTOR_B_PWM,OUTPUT);
-pinMode(MOTOR_STDBY,OUTPUT);
 
-ledcSetup(pwmChannel_A,pwmFreq,resolution);
-ledcSetup(pwmChannel_B,pwmFreq,resolution);
-ledcAttachPin(MOTOR_A_PWM,pwmChannel_A);
-ledcAttachPin(MOTOR_B_PWM,pwmChannel_B);
+    pinMode(MOTOR_A_1,OUTPUT);
+    pinMode(MOTOR_A_2,OUTPUT);
+    pinMode(MOTOR_B_1,OUTPUT);
+    pinMode(MOTOR_B_2,OUTPUT);
+    pinMode(MOTOR_A_PWM,OUTPUT);
+    pinMode(MOTOR_B_PWM,OUTPUT);
+    pinMode(MOTOR_STDBY,OUTPUT);
 
-stopSTDBY();
+    ledcSetup(pwmChannel_A,pwmFreq,resolution);
+    ledcSetup(pwmChannel_B,pwmFreq,resolution);
+    ledcAttachPin(MOTOR_A_PWM,pwmChannel_A);
+    ledcAttachPin(MOTOR_B_PWM,pwmChannel_B);
 
-vel_fb=127;
-vel_trn=127;
+    stopSTDBY();
 
+    vel_fb=127;
+    vel_trn=127;
 
-DEBUG("drive setup!")
+DEBUG("drive setup done!")
 }
 
 
@@ -63,7 +65,7 @@ void drive(int speed_A, int speed_B){
     ledcWrite(pwmChannel_A,abs(speed_A));
     digitalWrite(MOTOR_B_1,dir_B);
     digitalWrite(MOTOR_B_2,!dir_B);
-   ledcWrite(pwmChannel_B, abs(speed_B));
+    ledcWrite(pwmChannel_B, abs(speed_B));
    
 
 }
@@ -87,30 +89,37 @@ else{
 int MTL_speed=maxSpeed*fuzzyOR(f_FWD,f_TRN_L)-maxSpeed*fuzzyOR(f_BCK,f_TRN_R);
 int MTR_speed=maxSpeed*fuzzyOR(f_FWD,f_TRN_R)-maxSpeed*fuzzyOR(f_BCK,f_TRN_L);
 drive(MTL_speed,MTR_speed);
-//DEBUG(String(MTL_speed)+" "+String(MTR_speed));
+if(debug_drive)DEBUG(String(MTL_speed)+" "+String(MTR_speed));
 }
 }
 
 void updateDrive(int fb, int trn){
    float acc_fb=0;
    float acc_trn=0;
-    acc_fb=map(fb,0,255,-100,100)*0.01;
-    acc_trn=map(trn,0,255,-100,100)*0.01;
-vel_fb+=acc_fb;
-vel_trn+=acc_trn;
-if(vel_fb>255)vel_fb=255;
-if(vel_fb<0)vel_fb=0;
-if(vel_trn>255)vel_trn=255;
-if(vel_trn<0)vel_trn=0;
-
-DEBUG(String(vel_fb)+" "+String(vel_trn));
-fuzzyDrive((int)vel_fb, (int)vel_trn, 255);
-
+    acc_fb=map(fb,0,255,-100,100)*agility;
+    acc_trn=map(trn,0,255,-100,100)*agility;
+    if(abs(acc_fb)>dead_band)vel_fb+=acc_fb;
+     if(abs(acc_trn)>dead_band)vel_trn+=acc_trn;
+    if(vel_fb>255)vel_fb=255;
+    if(vel_fb<0)vel_fb=0;
+    if(vel_trn>255)vel_trn=255;
+    if(vel_trn<0)vel_trn=0;
+    if(debug_drive){
+    DEBUG(String(acc_fb)+" "+String(acc_trn));
+    DEBUG(String(vel_fb)+" "+String(vel_trn));
+    }   
+    fuzzyDrive((int)vel_fb, (int)vel_trn, 255);
+    if(vel_fb>127)vel_fb-=decelerate_rate*agility;
+    else if(vel_fb<127)vel_fb+=decelerate_rate*agility;
+    if(vel_trn>127)vel_trn-=decelerate_rate*agility;
+    else if(vel_trn<127)vel_trn+=decelerate_rate*agility;
 }
 
 void stopSmooth(){
-    vel_fb=(vel_fb>127)?vel_fb--:vel_fb++;
-    vel_trn=(vel_trn>127)?vel_trn--:vel_trn++;
+    if(vel_fb>127)vel_fb-=decelerate_rate*agility;
+    else if(vel_fb<127)vel_fb+=decelerate_rate*agility;
+    if(vel_trn>127)vel_trn-=decelerate_rate*agility;
+    else if(vel_trn<127)vel_trn+=decelerate_rate*agility;
     fuzzyDrive(vel_fb, vel_trn, 255);
 }
 #endif
