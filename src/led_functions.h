@@ -1,5 +1,5 @@
-#ifndef led_functions.h
-#define led_functions.h
+#ifndef LED_FUNCTIONS_H
+#define LED_FUNCTIONS_H
 
 #include <Arduino.h>
 #include <FastLED.h>
@@ -21,7 +21,14 @@ FastLED.addLeds<NEOPIXEL, LEDPIN>(leds, NUMLEDS);
 }
 
 void mood_friendly(){
-  EVERY_N_MILLIS(10){
+  EVERY_N_MILLIS(20){
+    fill_noise16(leds,NUMLEDS,3,1,1,1,1,15,0,millis()/50);
+  }
+  FastLED.show();  
+}
+
+void mood_excited(){
+  EVERY_N_MILLIS(5){
     fill_noise16(leds,NUMLEDS,3,1,1,1,1,15,0,millis()/10);
   }
   FastLED.show();  
@@ -36,6 +43,18 @@ EVERY_N_MILLIS(500){
 EVERY_N_MILLIS(5){
 
   fadeToBlackBy(leds,NUMLEDS,20);
+}
+ FastLED.show(); 
+}
+void mood_obstacle(){
+
+EVERY_N_MILLIS(100){
+  fill_solid(leds,NUMLEDS,CRGB::Red);
+} 
+
+EVERY_N_MILLIS(5){
+
+  fadeToBlackBy(leds,NUMLEDS,5);
 }
  FastLED.show(); 
 }

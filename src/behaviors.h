@@ -5,24 +5,43 @@
 #include <listening.h>
 #include <sense.h>
 
-
+long last_cmd_time;
+long bored_timeout=20000;
+bool bored=true;
 
 void idle(){
 
 }
 
 void manual(){
-
-    updateListening();
-    updateSense();
-    if(gotSomething){
+     updateListening();
+if(myData.x>160||myData.x<100||myData.y>160||myData.y<100)
+{
+    last_cmd_time=millis(); 
+    bored=false; 
+    restart_sense();  
+}  
+if(millis()-last_cmd_time>bored_timeout){
+    bored=true;
+    stop_sense();
+} 
+    
+    if(gotSomething&&!bored){
+        updateSense();
+        if(sensorData[sensorNames::LEFT]||sensorData[sensorNames::FRONT]||sensorData[sensorNames::RIGHT]){
+        mood_obstacle();
+        }
+        else{
+        mood_excited();
+        }
         int comp_fb=constrain(myData.x-sensorData[sensorNames::FRONT]*127,0,255);
-        int comp_trn=127;
-DEBUG(String(comp_fb));
-    updateDrive(comp_fb,myData.y);    
+        int comp_trn=127;        
+        updateDrive(comp_fb,myData.y);    
     }
     else{
-    stopSmooth();
+        
+    stopSmooth(); 
+    mood_friendly();  
     }
     
 }

@@ -25,7 +25,7 @@ void stopSTDBY(){
     digitalWrite(MOTOR_B_2,LOW);
     digitalWrite(MOTOR_A_PWM,LOW);
     digitalWrite(MOTOR_B_PWM,LOW);
-    DEBUG("STDBY!");
+    //DEBUG("STDBY!");
 }
 
 void initDrive(){
@@ -105,8 +105,8 @@ void updateDrive(int fb, int trn){
     if(vel_trn>255)vel_trn=255;
     if(vel_trn<0)vel_trn=0;
     if(debug_drive){
-    DEBUG(String(acc_fb)+" "+String(acc_trn));
-    DEBUG(String(vel_fb)+" "+String(vel_trn));
+   // DEBUG(String(acc_fb)+" "+String(acc_trn));
+   // DEBUG(String(vel_fb)+" "+String(vel_trn));
     }   
     fuzzyDrive((int)vel_fb, (int)vel_trn, 255);
     if(vel_fb>127)vel_fb-=decelerate_rate*agility;

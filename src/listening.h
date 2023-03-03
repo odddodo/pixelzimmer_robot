@@ -47,8 +47,6 @@ void updateListening(){
       if(gotSomething){
     
        
-mood_friendly();
-
 //DEBUG("received some data!");
 
   }

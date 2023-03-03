@@ -16,7 +16,7 @@
 #define IR_L_L 14
 #define IR_L_R 27
 #define IR_TOP_L 35
-#define IR_TOP_R 24
+#define IR_TOP_R 34
 
 #define SPS_IR_L 23
 #define SPS_IR_R 22
