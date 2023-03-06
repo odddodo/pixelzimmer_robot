@@ -34,7 +34,7 @@ if(millis()-last_cmd_time>bored_timeout){
         else{
         mood_excited();
         }
-        int comp_fb=constrain(myData.x-sensorData[sensorNames::FRONT]*127,0,255);
+        int comp_fb=constrain(myData.x-sensorData[sensorNames::FRONT]*127,0,max_speed);
         int comp_trn=127;        
         updateDrive(comp_fb,myData.y);    
     }

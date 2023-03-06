@@ -13,6 +13,8 @@ bool drive_ON=false;
 
 float agility=0.05;
 int decelerate_rate=20;
+int accelerate_rate=50;
+int max_speed=255;
 float dead_band=0.5;
 
 #define F_GRD_LO 127

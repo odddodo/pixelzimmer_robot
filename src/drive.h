@@ -96,8 +96,8 @@ if(debug_drive)DEBUG(String(MTL_speed)+" "+String(MTR_speed));
 void updateDrive(int fb, int trn){
    float acc_fb=0;
    float acc_trn=0;
-    acc_fb=map(fb,0,255,-100,100)*agility;
-    acc_trn=map(trn,0,255,-100,100)*agility;
+    acc_fb=map(fb,0,255,-accelerate_rate,accelerate_rate)*agility;
+    acc_trn=map(trn,0,255,-accelerate_rate,accelerate_rate)*agility;
     if(abs(acc_fb)>dead_band)vel_fb+=acc_fb;
      if(abs(acc_trn)>dead_band)vel_trn+=acc_trn;
     if(vel_fb>255)vel_fb=255;
