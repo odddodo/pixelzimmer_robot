@@ -10,6 +10,10 @@
 		},
 		{
 			"path": "../../../../Work/4PIXELZIMMER/code_research/maybe_talking"
+		},
+		{
+			"name": "pixelzimmer_artnet_dongle",
+			"path": "../pixelzimmer_artnet_dongle"
 		}
 	],
 	"settings": {}

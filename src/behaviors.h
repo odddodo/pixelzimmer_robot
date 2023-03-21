@@ -9,8 +9,29 @@ long last_cmd_time;
 long bored_timeout=20000;
 bool bored=true;
 
-void idle(){
+int random_trn_vector=127;
 
+void changeDirection(){
+random_trn_vector=random(50,205);
+}
+
+Ticker roamFree(changeDirection,1000);
+
+
+void initBehaviors(){
+ roamFree.start();   
+}
+
+void idle(){
+        if(sensorData[sensorNames::LEFT]||sensorData[sensorNames::FRONT]||sensorData[sensorNames::RIGHT]){
+        mood_obstacle();
+        }
+        else{
+        mood_friendly(); 
+        }
+        int comp_fb=constrain(127-sensorData[sensorNames::FRONT]*127,0,roam_speed);
+        int comp_trn=constrain(random_trn_vector-sensorData[sensorNames::LEFT]*200+sensorData[sensorNames::RIGHT]*200,0,255);        
+        fuzzyDrive(comp_fb,comp_trn,200);
 }
 
 void manual(){
@@ -47,7 +68,24 @@ if(millis()-last_cmd_time>bored_timeout){
 }
 
 void follow_line(){
-
+      updateSense();
+      roamFree.update();
+        if(sensorData[sensorNames::LEFT]||sensorData[sensorNames::FRONT]||sensorData[sensorNames::RIGHT]){
+        mood_obstacle();
+        }
+        else{
+        mood_friendly(); 
+        }
+        int comp_fb=constrain(roam_speed-sensorData[sensorNames::FRONT]*127,0,roam_speed);
+        int comp_trn;
+        if(flip_sensor_response){
+        comp_trn=constrain(127+sensorData[sensorNames::L_LEFT]*100-sensorData[sensorNames::L_RIGHT]*100,0,255);  
+        }
+        else{
+        comp_trn=constrain(127-sensorData[sensorNames::L_LEFT]*100+sensorData[sensorNames::L_RIGHT]*100,0,255);  
+        }
+              
+        fuzzyDrive(comp_fb,comp_trn,220);
 }
 
 void follow_IR(){
@@ -55,13 +93,30 @@ void follow_IR(){
 }
 
 void roam(){
-
+    
+      updateSense();
+      roamFree.update();
+        if(sensorData[sensorNames::LEFT]||sensorData[sensorNames::FRONT]||sensorData[sensorNames::RIGHT]){
+        mood_obstacle();
+        }
+        else{
+        mood_friendly(); 
+        }
+        int comp_fb=constrain(roam_speed-sensorData[sensorNames::FRONT]*200,0,roam_speed);
+        int comp_trn;
+        if(flip_sensor_response){
+        comp_trn=constrain(random_trn_vector+sensorData[sensorNames::LEFT]*200-sensorData[sensorNames::RIGHT]*200,0,255); 
+        }
+        else{
+        comp_trn=constrain(random_trn_vector-sensorData[sensorNames::LEFT]*200+sensorData[sensorNames::RIGHT]*200,0,255);   
+        }     
+        fuzzyDrive(comp_fb,comp_trn,200);
 }
 
 void behave(int mode){
     switch(mode){
         case 0:
-        idle();
+        roam();
         break;
         case 1:
         manual();
@@ -73,7 +128,7 @@ void behave(int mode){
         follow_IR();
         break;
         default:
-        roam();
+        idle();
 }
 }
 

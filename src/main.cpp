@@ -10,9 +10,10 @@ initDrive();
 initListening();
 initLeds();
 initSense();
+initBehaviors();
 }
  
 void loop() {
-behave(1);
+behave(2);
 
 }

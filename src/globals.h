@@ -15,7 +15,9 @@ float agility=0.05;
 int decelerate_rate=20;
 int accelerate_rate=50;
 int max_speed=255;
+int roam_speed=200;
 float dead_band=0.5;
+bool flip_sensor_response=true;
 
 #define F_GRD_LO 127
 #define F_GRD_HI 256
