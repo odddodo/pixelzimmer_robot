@@ -14,9 +14,9 @@ long lastMessage=0;
 long timeout=500;
 
 typedef struct test_struct {
-  int x;
-  int y;
-  int z;
+  int in_mode;
+  int in_fb;
+  int in_trn;
 } test_struct;
 
 

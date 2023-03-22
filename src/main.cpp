@@ -14,6 +14,7 @@ initBehaviors();
 }
  
 void loop() {
-behave(2);
+    updateListening();
+behave(myData.in_mode/64);
 
 }

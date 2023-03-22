@@ -32,11 +32,12 @@ void idle(){
         int comp_fb=constrain(127-sensorData[sensorNames::FRONT]*127,0,roam_speed);
         int comp_trn=constrain(random_trn_vector-sensorData[sensorNames::LEFT]*200+sensorData[sensorNames::RIGHT]*200,0,255);        
         fuzzyDrive(comp_fb,comp_trn,200);
+        stopSmooth();
 }
 
 void manual(){
      updateListening();
-if(myData.x>160||myData.x<100||myData.y>160||myData.y<100)
+if(myData.in_fb>160||myData.in_fb<100||myData.in_trn>160||myData.in_trn<100)
 {
     last_cmd_time=millis(); 
     bored=false; 
@@ -55,9 +56,9 @@ if(millis()-last_cmd_time>bored_timeout){
         else{
         mood_excited();
         }
-        int comp_fb=constrain(myData.x-sensorData[sensorNames::FRONT]*127,0,max_speed);
+        int comp_fb=constrain(myData.in_fb-sensorData[sensorNames::FRONT]*127,0,max_speed);
         int comp_trn=127;        
-        updateDrive(comp_fb,myData.y);    
+        updateDrive(comp_fb,myData.in_trn);    
     }
     else{
         
@@ -116,16 +117,16 @@ void roam(){
 void behave(int mode){
     switch(mode){
         case 0:
-        roam();
+        idle();
         break;
         case 1:
-        manual();
+        roam();
         break;
         case 2:
         follow_line();
         break;
         case 3:
-        follow_IR();
+        manual();
         break;
         default:
         idle();
