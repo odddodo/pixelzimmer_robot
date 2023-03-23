@@ -58,7 +58,7 @@ if(millis()-last_cmd_time>bored_timeout){
         }
         int comp_fb=constrain(myData.in_fb-sensorData[sensorNames::FRONT]*127,0,max_speed);
         int comp_trn=127;        
-        updateDrive(comp_fb,myData.in_trn);    
+        fuzzyDrive(comp_fb,myData.in_trn,max_speed);    
     }
     else{
         
