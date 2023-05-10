@@ -27,7 +27,7 @@ void idle(){
         mood_obstacle();
         }
         else{
-        mood_friendly(); 
+        //mood_friendly(); 
         }
         int comp_fb=constrain(127-sensorData[sensorNames::FRONT]*127,0,roam_speed);
         int comp_trn=constrain(random_trn_vector-sensorData[sensorNames::LEFT]*200+sensorData[sensorNames::RIGHT]*200,0,255);        
@@ -54,7 +54,7 @@ if(millis()-last_cmd_time>bored_timeout){
         mood_obstacle();
         }
         else{
-        mood_excited();
+        //mood_excited();
         }
         int comp_fb=constrain(myData.in_fb-sensorData[sensorNames::FRONT]*127,0,max_speed);
         int comp_trn=127;        
@@ -63,7 +63,7 @@ if(millis()-last_cmd_time>bored_timeout){
     else{
         
     stopSmooth(); 
-    mood_friendly();  
+    //mood_friendly();  
     }
     
 }
@@ -75,7 +75,7 @@ void follow_line(){
         mood_obstacle();
         }
         else{
-        mood_friendly(); 
+       // mood_friendly(); 
         }
         int comp_fb=constrain(roam_speed-sensorData[sensorNames::FRONT]*127,0,roam_speed);
         int comp_trn;
@@ -90,7 +90,42 @@ void follow_line(){
 }
 
 void follow_IR(){
+    if(bored){
+        bored=false;
+        restart_sense;
+    }
+      updateSense();
+      roamFree.update();
+     
 
+
+        int comp_fb=roam_speed;
+        int comp_trn=random_trn_vector;
+
+
+if(flip_sensor_response){
+    if(sensorData[sensorNames::FRONT]||(sensorData[sensorNames::LEFT]&&sensorData[sensorNames::RIGHT])){
+    comp_fb=constrain(comp_fb+200,0,255);
+}
+if(sensorData[sensorNames::LEFT]&&!sensorData[sensorNames::RIGHT]){
+flip_IR_follow_response==false? comp_trn=205:comp_trn=50;
+}
+else if(sensorData[sensorNames::RIGHT]&&!sensorData[sensorNames::LEFT]){
+flip_IR_follow_response==false? comp_trn=50:comp_trn=205; 
+}
+}
+else{
+    if(sensorData[sensorNames::FRONT]||(sensorData[sensorNames::LEFT]&&sensorData[sensorNames::RIGHT])){
+    comp_fb=constrain(comp_fb+200,0,255);
+}
+if(sensorData[sensorNames::LEFT]&&!sensorData[sensorNames::RIGHT]){
+flip_IR_follow_response==false? comp_trn=50:comp_trn=205;
+}
+else if(sensorData[sensorNames::RIGHT]&&!sensorData[sensorNames::LEFT]){
+flip_IR_follow_response==false? comp_trn=205:comp_trn=50; 
+}
+}   
+        fuzzyDrive(comp_fb,comp_trn,200);
 }
 
 void roam(){
@@ -101,7 +136,7 @@ void roam(){
         mood_obstacle();
         }
         else{
-        mood_friendly(); 
+        //mood_friendly(); 
         }
         int comp_fb=constrain(roam_speed-sensorData[sensorNames::FRONT]*200,0,roam_speed);
         int comp_trn;
@@ -114,23 +149,40 @@ void roam(){
         fuzzyDrive(comp_fb,comp_trn,200);
 }
 
-void behave(int mode){
+void behave(int mode,int mood){
     switch(mode){
         case 0:
         idle();
+        if(!(sense.state()==RUNNING)){
+            restart_sense();
+        }
         break;
         case 1:
         roam();
+                if(!(sense.state()==RUNNING)){
+            restart_sense();
+        }
         break;
         case 2:
         follow_line();
+                if(!(sense.state()==RUNNING)){
+            restart_sense();
+        }
         break;
         case 3:
-        manual();
+        follow_IR();
+                if(!(sense.state()==RUNNING)){
+            restart_sense();
+        }
         break;
-        default:
-        idle();
+        case 4:
+        manual();
+                if(!(sense.state()==RUNNING)){
+            restart_sense();
+        }
+        break;
 }
+showMood(mood);
 }
 
 

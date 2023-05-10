@@ -6,6 +6,7 @@
 
 
 void setup() {
+//delay(5000);
 initDrive();
 initListening();
 initLeds();
@@ -14,7 +15,7 @@ initBehaviors();
 }
  
 void loop() {
-    updateListening();
-behave(myData.in_mode/64);
+updateListening();
+behave(myData.in_mode/51,myData.in_mood/36);
 
 }

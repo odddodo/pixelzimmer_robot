@@ -57,8 +57,28 @@ DEBUG("drive setup done!")
 void drive(int speed_A, int speed_B){
     int dir_A=LOW;
     int dir_B=LOW;
+    if(flip_motor_direction){
+    dir_A=(speed_A>0)?HIGH:LOW;
+    dir_B=(speed_B>0)?HIGH:LOW;
+    }   
+
+        else{
+
     dir_A=(speed_A>0)?LOW:HIGH;
     dir_B=(speed_B>0)?LOW:HIGH;
+            
+        }
+    if(flip_rotation_response){
+    digitalWrite(MOTOR_STDBY,HIGH);
+    digitalWrite(MOTOR_B_1,dir_A);
+    digitalWrite(MOTOR_B_2,!dir_A);
+    ledcWrite(pwmChannel_B,abs(speed_A));
+    digitalWrite(MOTOR_A_1,dir_B);
+    digitalWrite(MOTOR_A_2,!dir_B);
+    ledcWrite(pwmChannel_A, abs(speed_B));
+
+    }
+    else{
     digitalWrite(MOTOR_STDBY,HIGH);
     digitalWrite(MOTOR_A_1,dir_A);
     digitalWrite(MOTOR_A_2,!dir_A);
@@ -66,7 +86,7 @@ void drive(int speed_A, int speed_B){
     digitalWrite(MOTOR_B_1,dir_B);
     digitalWrite(MOTOR_B_2,!dir_B);
     ledcWrite(pwmChannel_B, abs(speed_B));
-   
+    }
 
 }
 

@@ -11,12 +11,13 @@
 bool gotSomething=false;
 
 long lastMessage=0;
-long timeout=500;
+long timeout=600;
 
 typedef struct test_struct {
   int in_mode;
   int in_fb;
   int in_trn;
+  int in_mood;
 } test_struct;
 
 
@@ -54,7 +55,7 @@ void updateListening(){
   if(millis()-lastMessage>timeout){
     gotSomething=false;
    stopSTDBY(); 
-mood_angry();
+   mood_angry();
 //DEBUG("not getting the data!");
   }
 }

@@ -64,11 +64,11 @@ void updateSense(){
    //setIndividual(1,sensorData[1]);
    //setIndividual(2,sensorData[2]);
 //if(debug_sense)DEBUG("L:"+String(sensorData[sensorNames::LEFT])+" "+"F:"+String(sensorData[sensorNames::FRONT])+" "+"R:"+String(sensorData[sensorNames::RIGHT]));
-DEBUG(String(ambient_sensor_data[0]));
+//DEBUG(String(ambient_sensor_data[0]));
 }
 
 void stop_sense(){
-    sense.stop();
+    sense.pause();
      for(int i=0;i<5;i++){ 
 digitalWrite(s_PWR_addr[i],0);  
      }  
@@ -76,6 +76,6 @@ digitalWrite(s_PWR_addr[i],0);
 
 void restart_sense(){
 s_PWR_state[0]=1;
-sense.start();
+sense.resume();
 }
 #endif

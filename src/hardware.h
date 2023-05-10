@@ -25,6 +25,6 @@
 #define SPS_IR_L_R 21
 
 #define LEDPIN 13
-#define NUMLEDS 24
+#define NUMLEDS 31// for medium
 
 #endif

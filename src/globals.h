@@ -17,7 +17,10 @@ int accelerate_rate=50;
 int max_speed=255;
 int roam_speed=200;
 float dead_band=0.5;
-bool flip_sensor_response=false;
+bool flip_IR_follow_response=true;//true for m_green
+bool flip_sensor_response=true;//false for small, true for m_green
+bool flip_motor_direction=false;//true for small
+bool flip_rotation_response=true;//true for mgrey
 
 #define F_GRD_LO 127
 #define F_GRD_HI 256
