@@ -25,6 +25,6 @@
 #define SPS_IR_L_R 21
 
 #define LEDPIN 13
-#define NUMLEDS 31// for medium
+#define NUMLEDS 24// 7 for small, 24 for medium, 31 for heart
 
 #endif

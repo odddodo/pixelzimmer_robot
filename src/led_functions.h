@@ -71,13 +71,8 @@ EVERY_N_MILLIS(10){
 }
 
 void undecided(){
-EVERY_N_MILLIS(1000){
-  fill_solid(leds,NUMLEDS,CRGB::PaleVioletRed);
-  
-} 
-EVERY_N_MILLIS(5){
-
-  fadeToBlackBy(leds,NUMLEDS,5);
+EVERY_N_MILLIS(100){
+  fill_solid(leds,NUMLEDS,CRGB::Black);
 }
 }
 

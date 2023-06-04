@@ -133,6 +133,8 @@ void updateDrive(int fb, int trn){
     else if(vel_fb<127)vel_fb+=decelerate_rate*agility;
     if(vel_trn>127)vel_trn-=decelerate_rate*agility;
     else if(vel_trn<127)vel_trn+=decelerate_rate*agility;
+    
+    
 }
 
 void stopSmooth(){

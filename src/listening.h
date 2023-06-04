@@ -55,8 +55,9 @@ void updateListening(){
   if(millis()-lastMessage>timeout){
     gotSomething=false;
    stopSTDBY(); 
-   mood_angry();
+   //mood_angry();
 //DEBUG("not getting the data!");
   }
+  flag[0]=1;
 }
 #endif

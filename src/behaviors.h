@@ -11,15 +11,24 @@ bool bored=true;
 
 int random_trn_vector=127;
 
+int c_fb=127;
+int c_lr=127;
+int c_speed=0;
+
 void changeDirection(){
 random_trn_vector=random(50,205);
 }
 
-Ticker roamFree(changeDirection,1000);
+void driveAround(){
+    fuzzyDrive(c_fb,c_lr,c_speed);
+}
 
+Ticker roamFree(changeDirection,1000);
+Ticker move(driveAround,35);
 
 void initBehaviors(){
- roamFree.start();   
+ roamFree.start();  
+ move.start(); 
 }
 
 void idle(){
@@ -31,7 +40,12 @@ void idle(){
         }
         int comp_fb=constrain(127-sensorData[sensorNames::FRONT]*127,0,roam_speed);
         int comp_trn=constrain(random_trn_vector-sensorData[sensorNames::LEFT]*200+sensorData[sensorNames::RIGHT]*200,0,255);        
-        fuzzyDrive(comp_fb,comp_trn,200);
+        //fuzzyDrive(comp_fb,comp_trn,200);
+        c_fb=comp_fb;
+        c_lr=comp_trn;
+        c_speed=200;
+
+        move.update();
         stopSmooth();
 }
 
@@ -51,14 +65,25 @@ if(millis()-last_cmd_time>bored_timeout){
     if(gotSomething&&!bored){
         updateSense();
         if(sensorData[sensorNames::LEFT]||sensorData[sensorNames::FRONT]||sensorData[sensorNames::RIGHT]){
-        mood_obstacle();
+        //mood_obstacle();
         }
         else{
         //mood_excited();
         }
-        int comp_fb=constrain(myData.in_fb-sensorData[sensorNames::FRONT]*127,0,max_speed);
+        int comp_fb;
+        if(disable_front){
+        comp_fb=constrain(myData.in_fb,0,max_speed);
+                    }
+                    else{
+                     comp_fb=constrain(myData.in_fb-sensorData[sensorNames::FRONT]*127,0,max_speed);   
+                    }
+        
         int comp_trn=127;        
-        fuzzyDrive(comp_fb,myData.in_trn,max_speed);    
+        //fuzzyDrive(comp_fb,myData.in_trn,max_speed);  
+                c_fb=comp_fb;
+        c_lr=myData.in_trn;
+        c_speed=max_speed;
+        move.update();  
     }
     else{
         
@@ -72,12 +97,19 @@ void follow_line(){
       updateSense();
       roamFree.update();
         if(sensorData[sensorNames::LEFT]||sensorData[sensorNames::FRONT]||sensorData[sensorNames::RIGHT]){
-        mood_obstacle();
+        //mood_obstacle();
         }
         else{
        // mood_friendly(); 
         }
-        int comp_fb=constrain(roam_speed-sensorData[sensorNames::FRONT]*127,0,roam_speed);
+        int comp_fb;
+        if(disable_front){
+        comp_fb=constrain(roam_speed,0,roam_speed);
+        }
+        else{
+        comp_fb=constrain(roam_speed-sensorData[sensorNames::FRONT]*127,0,roam_speed);
+        }
+        
         int comp_trn;
         if(flip_sensor_response){
         comp_trn=constrain(127+sensorData[sensorNames::L_LEFT]*100-sensorData[sensorNames::L_RIGHT]*100,0,255);  
@@ -86,7 +118,11 @@ void follow_line(){
         comp_trn=constrain(127-sensorData[sensorNames::L_LEFT]*100+sensorData[sensorNames::L_RIGHT]*100,0,255);  
         }
               
-        fuzzyDrive(comp_fb,comp_trn,220);
+        //fuzzyDrive(comp_fb,comp_trn,220);
+        c_fb=comp_fb;
+        c_lr=comp_trn;
+        c_speed=200;
+        move.update();
 }
 
 void follow_IR(){
@@ -125,7 +161,11 @@ else if(sensorData[sensorNames::RIGHT]&&!sensorData[sensorNames::LEFT]){
 flip_IR_follow_response==false? comp_trn=205:comp_trn=50; 
 }
 }   
-        fuzzyDrive(comp_fb,comp_trn,200);
+        //fuzzyDrive(comp_fb,comp_trn,200);
+                c_fb=comp_fb;
+        c_lr=comp_trn;
+        c_speed=200;
+        move.update();
 }
 
 void roam(){
@@ -146,7 +186,11 @@ void roam(){
         else{
         comp_trn=constrain(random_trn_vector-sensorData[sensorNames::LEFT]*200+sensorData[sensorNames::RIGHT]*200,0,255);   
         }     
-        fuzzyDrive(comp_fb,comp_trn,200);
+        //fuzzyDrive(comp_fb,comp_trn,200);
+                c_fb=comp_fb;
+        c_lr=comp_trn;
+        c_speed=200;
+        move.update();
 }
 
 void behave(int mode,int mood){
@@ -183,6 +227,7 @@ void behave(int mode,int mood){
         break;
 }
 showMood(mood);
+flag[1]=1;
 }
 
 
